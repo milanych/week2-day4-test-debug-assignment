@@ -1,46 +1,49 @@
-function displayQuote() {
+const textElement = document.querySelector("#text");
+const authorElement = document.querySelector("#author");
+const form = document.querySelector("#create-form");
+const randomiseButton = document.querySelector("#btn-randomise");
 
-  const quote = {
-    content: "More than introversion or logic, though, coding selects for people who can handle endless frustration.",
-    author: "Clive Thompson"
-  };
 
-  const textElement = document.querySelector("#text");
-  const authorElement = document.querySelector("#author");
+async function fetchQuotesData() {
+  try {
+    const repsData = await fetch(`http://localhost:3000/quotes/random`)
+    const quote = await repsData.json();
+    displayQuote(quote);
+  } catch (e) {
+    console.log(e);
+  }
+}
 
-  textElement.textContent = quote["content"];
+function displayQuote(quote) {
+  console.log(quote)
+  textElement.textContent = quote["text"];
   authorElement.textContent = quote["author"];
-
 }
 
 async function createNewQuote(e) {
-
   e.preventDefault();
 
   const data = {
-      text: e.target.name.value,
-      author: e.target.author.value 
+    text: e.target.quote.value,
+    author: e.target.author.value
   }
-
   const options = {
-      method: "POST",
-      headers: {
-          "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
   }
 
-  const response = fetch("http://localhost:3000/quotes", options);
-
+  const response = await fetch("http://localhost:3000/quotes", options);
   if (response.status == 201) {
-    e.target.name.value = ''
+    e.target.quote.value = ''
     e.target.author.value = ''
     alert("Quote added.")
+  } else {
+    alert("Fill both fields!!!")
   }
 }
 
-const form = document.querySelector("#create-form");
 form.addEventListener("submit", createNewQuote);
-
-const randomiseButton = document.querySelector("#btn-randomise");
-randomiseButton.addEventListener('click', displayquote);
+randomiseButton.addEventListener('click', fetchQuotesData);

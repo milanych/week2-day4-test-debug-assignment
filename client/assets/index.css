@@ -2,6 +2,7 @@ body {
   background-size: cover;
   font-family: monospace;
   padding: 1rem;
+  background-image: url(background.jpg);
 }
 
 section {
@@ -28,7 +29,7 @@ section {
   padding: 1rem;
 }
 
-section > h1, section > button {
+section>h1, section>button {
   flex-shrink: 0;
   height: 3rem;
 }
